@@ -1,12 +1,13 @@
 import express from 'express';
 import {
-  createContact,
-  deleteContact,
   getAllContacts,
   getOneContact,
+  createContact,
   updateContact,
+  deleteContact,
   updateFavorite,
 } from '../controllers/contactsControllers.js';
+import auth from '../helpers/auth.js';
 import validateBody from '../helpers/validateBody.js';
 import {
   createContactSchema,
@@ -16,11 +17,13 @@ import {
 
 const contactsRouter = express.Router();
 
+contactsRouter.use(auth);
+
 contactsRouter.get('/', getAllContacts);
 contactsRouter.get('/:id', getOneContact);
-contactsRouter.delete('/:id', deleteContact);
 contactsRouter.post('/', validateBody(createContactSchema), createContact);
 contactsRouter.put('/:id', validateBody(updateContactSchema), updateContact);
+contactsRouter.delete('/:id', deleteContact);
 contactsRouter.patch(
   '/:id/favorite',
   validateBody(updateFavoriteSchema),
